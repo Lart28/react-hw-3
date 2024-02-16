@@ -24,7 +24,7 @@ export class App extends Component{
     const { query, page } = this.state;
     if (prevState.query !== query) {
       this.setState({ loading: true })
-      fetch(`${URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`)
+        fetch(`${URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`)
         .then(res => {
           if (res.ok) {
             return res.json()
@@ -91,11 +91,11 @@ export class App extends Component{
           <Modal onClose={this.toggleModal}>
             <img src={selectedPicture.largeImageURL} alt={selectedPicture.tags} />
           </Modal> )} 
-        <Searchbar onSubmit={this.handleSearchbarSubmit} />
+        <Searchbar onSubmit={this.handleSearchbarSubmit} isSubmitting={loading}/>
         {error && <h1>{error.message}</h1>}
         {response && <ImageGallery pictures={response} onClick={this.toggleModal}/>}
         {loading && <Loader/>}
-        {response && !loading && totalPages !== page &&<Button onClick={this.handleMore} />}
+        {response && !loading && totalPages !== page && <Button onClick={this.handleMore} />}
       </>
     )
   }

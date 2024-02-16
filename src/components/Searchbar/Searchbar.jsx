@@ -27,7 +27,7 @@ class Searchbar extends Component {
     return (
       <header className='Searchbar'>
         <form className='SearchForm' onSubmit={this.handleSubmit}>
-          <button type='submit' className='SearchForm-button'>
+          <button type='submit' disabled={this.props.isSubmitting} className='SearchForm-button'>
             <span className='SearchForm-button-label'>Search</span>
           </button>
           <input
@@ -50,4 +50,5 @@ export default Searchbar;
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
 }
