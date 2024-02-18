@@ -22,7 +22,7 @@ export class App extends Component{
 
   componentDidUpdate(prevProps, prevState) { 
     const { query, page } = this.state;
-    if (prevState.query !== query) {
+    if (prevState.query !== query || prevState.page !== page) {
       this.setState({ loading: true })
         fetch(`${URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`)
         .then(res => {
@@ -31,28 +31,23 @@ export class App extends Component{
           }
           return Promise.reject(new Error('Сталась помилка'))
         })
-        .then(pictures => {
-          if (pictures.hits.length === 0) {
-            alert('Нічого не знайдено, спробуйте інший запит');
-          } else {
-            return (
-              this.setState({ response: null }),
-              this.setState({ response: pictures.hits, totalHits: pictures.totalHits })
-              )
-          }
+          .then(pictures => {
+            if (prevState.query !== query) {
+              if (pictures.hits.length === 0) {
+                alert('Нічого не знайдено, спробуйте інший запит');
+              } else {
+                return (
+                  this.setState({ response: null }),
+                  this.setState({ response: pictures.hits, totalHits: pictures.totalHits })
+                )
+              }
+              } else {
+                this.setState(prevState => ({ response: prevState.response.concat(pictures.hits) }))
+              }
         })
         .catch(error => this.setState({ error }))
         .finally(this.setState({loading: false}))
-    } else {
-      if (prevState.page !== page) {
-        this.setState({ loading: true })
-          fetch(`${URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`)
-            .then(res => res.json())
-            .then(pictures => this.setState(prevState => ({ response: prevState.response.concat(pictures.hits) })))
-            .catch(error => this.setState({ error }))
-            .finally(this.setState({ loading: false }))
-      }
-    }
+    } 
   }
 
   toggleModal = id => {
